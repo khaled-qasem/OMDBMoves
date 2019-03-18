@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 28
@@ -13,22 +13,115 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+        multiDexEnabled = true
     }
+
+    dataBinding {
+        enabled = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
+
+    flavorDimensions "default"
+
+    productFlavors {
+        devel {
+            dimension "default"
+
+            buildConfigField 'boolean', 'DEBUG_ENABLED', 'true'
+
+            //omdb domain
+            buildConfigField 'String', 'WAKECAP_DOMAIN', '"https://www.omdbapi.com/"'
+
+        }
+
+        prod {
+            dimension "default"
+
+            buildConfigField 'boolean', 'DEBUG_ENABLED', 'false'
+
+            //omdb domain
+            buildConfigField 'String', 'WAKECAP_DOMAIN', '"https://www.omdbapi.com/"'
+
+        }
+    }
+
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'androidx.core:core-ktx:1.1.0-alpha05'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    //Android Support Libraries
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "androidx.appcompat:appcompat:$supportVersion"
+    implementation "com.google.android.material:material:$supportVersion"
+    implementation "androidx.cardview:cardview:$supportVersion"
+    implementation "androidx.percentlayout:percentlayout:$supportVersion"
+    implementation "androidx.legacy:legacy-support-v4:$supportVersion"
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+
+    //dagger2
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
+    kapt "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    //Retrofit2 Dependencies
+    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
+
+    //lifecycle
+    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+
+    //rxJava
+    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
+    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+
+    //KTX
+    implementation "androidx.core:core-ktx:$ktxVersion"
+    implementation "androidx.fragment:fragment-ktx:$ktxFragmentVersion"
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+
+    implementation('it.sephiroth.android.exif:library:1.0.1') {
+        exclude module: 'commons-io'
+    }
+
+    implementation 'com.jakewharton.timber:timber:4.7.1'
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    //realm
+    implementation 'io.realm:realm-gradle-plugin:5.9.1'
+
 }
