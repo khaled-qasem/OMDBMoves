@@ -41,7 +41,7 @@ android {
             buildConfigField 'boolean', 'DEBUG_ENABLED', 'true'
 
             //omdb domain
-            buildConfigField 'String', 'WAKECAP_DOMAIN', '"https://www.omdbapi.com/"'
+            buildConfigField 'String', 'OMDB_DOMAIN', '"https://www.omdbapi.com/"'
 
         }
 
@@ -51,7 +51,7 @@ android {
             buildConfigField 'boolean', 'DEBUG_ENABLED', 'false'
 
             //omdb domain
-            buildConfigField 'String', 'WAKECAP_DOMAIN', '"https://www.omdbapi.com/"'
+            buildConfigField 'String', 'OMDB_DOMAIN', '"https://www.omdbapi.com/"'
 
         }
     }
