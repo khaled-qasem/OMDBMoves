@@ -1,6 +1,6 @@
 package com.khaled.omdbmoves.di
 
-import com.khaled.omdbmoves.ui.MainActivity
+import com.khaled.omdbmoves.ui.MoviesActivity
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 
@@ -8,5 +8,5 @@ import dagger.android.ContributesAndroidInjector
 abstract class ActivitiesBuilderModule {
 
     @ContributesAndroidInjector
-    abstract fun contributeMainActivity(): MainActivity
+    abstract fun contributeMainActivity(): MoviesActivity
 }

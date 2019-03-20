@@ -2,7 +2,7 @@ package com.khaled.omdbmoves.di.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.khaled.omdbmoves.ui.MainActivityViewModel
+import com.khaled.omdbmoves.ui.MoviesActivityViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap
@@ -16,6 +16,6 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(MainActivityViewModel::class)
-    abstract fun bindMainActivityViewModel(mainActivityViewModel: MainActivityViewModel): ViewModel
+    @ViewModelKey(MoviesActivityViewModel::class)
+    abstract fun bindMainActivityViewModel(moviesActivityViewModel: MoviesActivityViewModel): ViewModel
 }

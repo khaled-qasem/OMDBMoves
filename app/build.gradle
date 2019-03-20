@@ -8,7 +8,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.khaled.omdbmoves"
-        minSdkVersion 15
+        minSdkVersion 18
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -41,7 +41,10 @@ android {
             buildConfigField 'boolean', 'DEBUG_ENABLED', 'true'
 
             //omdb domain
-            buildConfigField 'String', 'OMDB_DOMAIN', '"https://www.omdbapi.com/"'
+            buildConfigField 'String', 'OMDB_DOMAIN', '"https://api.themoviedb.org/"'
+
+            //API
+            buildConfigField 'String', 'API', '"8a3f5e5a12f41d22d28a1a8229fb38ad"'
 
         }
 
@@ -51,7 +54,10 @@ android {
             buildConfigField 'boolean', 'DEBUG_ENABLED', 'false'
 
             //omdb domain
-            buildConfigField 'String', 'OMDB_DOMAIN', '"https://www.omdbapi.com/"'
+            buildConfigField 'String', 'OMDB_DOMAIN', '"https://api.themoviedb.org/"'
+
+            //API
+            buildConfigField 'String', 'API', '"8a3f5e5a12f41d22d28a1a8229fb38ad"'
 
         }
     }
@@ -118,10 +124,18 @@ dependencies {
         exclude module: 'commons-io'
     }
 
+    // Glide Dependencies
+    implementation "com.github.bumptech.glide:glide:4.8.0"
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
+    kapt "com.github.bumptech.glide:compiler:4.8.0"
+    implementation 'jp.wasabeef:glide-transformations:3.3.0'
+    implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+    //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+    //MultiDex
     implementation 'androidx.multidex:multidex:2.0.1'
-
     //realm
     implementation 'io.realm:realm-gradle-plugin:5.9.1'
-
+    // Clearable Edit Text View
+    implementation 'com.github.Cielsk:clearable-edittext:0.0.6'
 }

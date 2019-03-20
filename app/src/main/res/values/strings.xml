@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">OMDB Moves</string>
+    <string name="search_for_movie">Search for movie</string>
+    <string name="movies">Movies</string>
 </resources>
