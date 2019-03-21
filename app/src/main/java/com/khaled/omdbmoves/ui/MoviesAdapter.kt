@@ -6,7 +6,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.DiffUtil
 import com.khaled.omdbmoves.R
 import com.khaled.omdbmoves.binding.PhotoManagerDataBindingComponent
-import com.khaled.omdbmoves.data.network.themoviedb.models.Movie
+import com.khaled.omdbmoves.data.model.Movie
 import com.khaled.omdbmoves.databinding.ListItemMovieBinding
 import com.khaled.omdbmoves.utils.ui.DataBoundListAdapter
 

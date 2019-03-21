@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.multidex.MultiDexApplication
 import com.khaled.omdbmoves.BuildConfig
 import com.khaled.omdbmoves.di.AppComponent
-import com.khaled.omdbmoves.di.AppInjector
 import com.khaled.omdbmoves.di.DaggerAppComponent
 import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListener
 import dagger.android.AndroidInjector

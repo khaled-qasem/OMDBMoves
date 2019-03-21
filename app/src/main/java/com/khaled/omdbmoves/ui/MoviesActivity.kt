@@ -13,7 +13,6 @@ import com.khaled.omdbmoves.di.Injectable
 import com.khaled.omdbmoves.utils.extensions.viewModel
 import com.khaled.omdbmoves.utils.ui.SimpleDividerItemDecoration
 import onTextChanged
-import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity(), Injectable {
@@ -54,7 +53,7 @@ class MoviesActivity : AppCompatActivity(), Injectable {
             moviesAdapter.submitList(it)
         })
 
-        moviesActivityViewModel.error.observe(this, Observer { error ->
+        moviesActivityViewModel.error.observe(this, Observer {
             Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_LONG).show()
         })
     }

@@ -1,8 +1,8 @@
-package com.khaled.omdbmoves.data.network.themoviedb.models
+package com.khaled.omdbmoves.data.network.themoviedb.model
 
 import com.google.gson.annotations.SerializedName
 
-data class Movie(
+data class ApiMovie(
     @SerializedName("adult")
     val adult: Boolean,
     @SerializedName("backdrop_path")

@@ -1,7 +1,7 @@
 package com.khaled.omdbmoves.ui
 
 import androidx.lifecycle.MutableLiveData
-import com.khaled.omdbmoves.data.network.themoviedb.models.Movie
+import com.khaled.omdbmoves.data.model.Movie
 import com.khaled.omdbmoves.di.net.connectivity.ConnectivityListener
 import com.khaled.omdbmoves.repository.MoviesRepository
 import com.khaled.omdbmoves.utils.viewmodel.DisposableViewModel
@@ -15,9 +15,8 @@ import javax.inject.Inject
 
 class MoviesActivityViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository,
-    private val connectivityListener: ConnectivityListener
-) :
-    DisposableViewModel(), ConnectivityListener.ConnectivityChangeListener {
+    connectivityListener: ConnectivityListener
+) : DisposableViewModel(), ConnectivityListener.ConnectivityChangeListener {
     val moviesLiveData = MutableLiveData<List<Movie>>()
     val isLoading = MutableLiveData<Boolean>()
     val error = MutableLiveData<String>()
@@ -67,8 +66,11 @@ class MoviesActivityViewModel @Inject constructor(
                 moviesRepository.getMoviesFromDB()
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({
-                        it.forEach {
-                            Timber.d(it.title)
+                        moviesList = it.orEmpty()
+                        if (searchString.isNotEmpty()) {
+                            searchMovie(searchString)
+                        } else {
+                            moviesLiveData.value = it
                         }
                         hideLoading()
                     }, {

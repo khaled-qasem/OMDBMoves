@@ -1,6 +1,6 @@
 package com.khaled.omdbmoves.data.network.themoviedb
 
-import com.khaled.omdbmoves.data.network.themoviedb.models.MoviesApiResponse
+import com.khaled.omdbmoves.data.network.themoviedb.model.MoviesApiResponse
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query

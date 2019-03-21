@@ -3,7 +3,7 @@ import android.text.TextWatcher
 import android.widget.EditText
 
 /**
- * invokes that callback after text change in EditText.
+ * Invokes that callback after text change in EditText.
  */
 inline fun EditText.onTextChanged(crossinline onTextChange: (String) -> Unit) {
     this.addTextChangedListener(object : TextWatcher {

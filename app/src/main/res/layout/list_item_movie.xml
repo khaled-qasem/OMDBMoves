@@ -7,7 +7,7 @@
 
         <variable
             name="movie"
-            type="com.khaled.omdbmoves.data.network.themoviedb.models.Movie" />
+            type="com.khaled.omdbmoves.data.model.Movie" />
     </data>
 
     <RelativeLayout
@@ -31,7 +31,7 @@
             android:background="@color/white"
             android:scaleType="centerCrop"
             app:circular="@{true}"
-            app:url="@{movie.backdropPath}"
+            app:url="@{movie.posterPath}"
             tools:ignore="ContentDescription"
             tools:src="@drawable/default_movie" />
 

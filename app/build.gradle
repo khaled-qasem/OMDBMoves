@@ -70,7 +70,7 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
     implementation 'androidx.core:core-ktx:1.1.0-alpha05'
@@ -78,7 +78,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     //Android Support Libraries
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:$supportVersion"
@@ -105,37 +106,39 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
     kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
     implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     //rxJava
-    implementation "io.reactivex.rxjava2:rxandroid:2.1.0"
-    implementation "io.reactivex.rxjava2:rxkotlin:2.3.0"
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
 
     //KTX
     implementation "androidx.core:core-ktx:$ktxVersion"
     implementation "androidx.fragment:fragment-ktx:$ktxFragmentVersion"
     implementation 'androidx.exifinterface:exifinterface:1.0.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
-
     implementation('it.sephiroth.android.exif:library:1.0.1') {
         exclude module: 'commons-io'
     }
 
     // Glide Dependencies
-    implementation "com.github.bumptech.glide:glide:4.8.0"
+    implementation 'com.github.bumptech.glide:glide:4.8.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
     kapt "com.github.bumptech.glide:compiler:4.8.0"
     implementation 'jp.wasabeef:glide-transformations:3.3.0'
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
+
     //Timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
+
     //MultiDex
     implementation 'androidx.multidex:multidex:2.0.1'
+
     //realm
     implementation 'io.realm:realm-gradle-plugin:5.9.1'
+
     // Clearable Edit Text View
     implementation 'com.github.Cielsk:clearable-edittext:0.0.6'
 }

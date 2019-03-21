@@ -13,7 +13,7 @@ abstract class DisposableViewModel : ViewModel() {
     /**
      *  used to store all [Disposable] objects inside the viewModel
      */
-    val compositeDisposable = CompositeDisposable()
+    protected val compositeDisposable = CompositeDisposable()
 
     /**
      *  clear all [Disposable]s when the [ViewModel] get destroyed, to prevent a memory leaks
