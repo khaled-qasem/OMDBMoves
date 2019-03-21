@@ -7,6 +7,8 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
+import android.widget.Toast
+import com.khaled.omdbmoves.R
 import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListener
 import com.khaled.omdbmoves.di.net.connectivity.ConnectivityListener.ConnectivityChangeListener
 import javax.inject.Inject
@@ -90,15 +92,10 @@ class ConnectivityListenerImpl @Inject constructor(
         if (activity == null || !applicationLifeCycleListener.isAppInForeground()) {
             return
         }
-//        SnackBarUtil.with(activity) {
-//            message =
-//                if (isConnected) activity.resources.getString(R.string.connected) else activity.resources.getString(
-//                    R.string.no_internet_connection
-//                )
-//            duration = if (isConnected) Snackbar.LENGTH_LONG else Snackbar.LENGTH_INDEFINITE
-//            actionType = if (isConnected) SnackBarUtil.SUCCESS else SnackBarUtil.ERROR
-//            dismissible = isConnected
-//            show()
-//        }
+        if (isConnected) {
+            Toast.makeText(activity, R.string.connected, Toast.LENGTH_LONG).show()
+        } else {
+            Toast.makeText(activity, R.string.disconnected, Toast.LENGTH_LONG).show()
+        }
     }
 }

@@ -12,6 +12,7 @@ import com.khaled.omdbmoves.di.photos.PhotosManager
 import com.khaled.omdbmoves.di.photos.PhotosManagerImpl
 import dagger.Module
 import dagger.Provides
+import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -61,4 +62,8 @@ class AppModule {
     @Provides
     @Singleton
     fun providePhotoManager(photosManagerImpl: PhotosManagerImpl): PhotosManager = photosManagerImpl
+
+    @Provides
+    @Singleton
+    fun provideRealm(): Realm = Realm.getDefaultInstance()
 }

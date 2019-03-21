@@ -2,6 +2,7 @@ package com.khaled.omdbmoves.ui
 
 import androidx.lifecycle.MutableLiveData
 import com.khaled.omdbmoves.data.network.themoviedb.models.Movie
+import com.khaled.omdbmoves.di.net.connectivity.ConnectivityListener
 import com.khaled.omdbmoves.repository.MoviesRepository
 import com.khaled.omdbmoves.utils.viewmodel.DisposableViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -12,40 +13,71 @@ import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class MoviesActivityViewModel @Inject constructor(private val moviesRepository: MoviesRepository) :
-    DisposableViewModel() {
-
+class MoviesActivityViewModel @Inject constructor(
+    private val moviesRepository: MoviesRepository,
+    private val connectivityListener: ConnectivityListener
+) :
+    DisposableViewModel(), ConnectivityListener.ConnectivityChangeListener {
     val moviesLiveData = MutableLiveData<List<Movie>>()
     val isLoading = MutableLiveData<Boolean>()
+    val error = MutableLiveData<String>()
     private val searchSubject = PublishSubject.create<String>()
     private var moviesList = emptyList<Movie>()
     private var searchString: String = ""
 
-
     init {
         addSearchSubjectDisposable()
-        getMovies(false)
+        connectivityListener.registerForConnectivityChange(this)
+        if (connectivityListener.isConnected) {
+            getMovies(true)
+        } else {
+            getMovies(false)
+        }
+    }
+
+    override fun onConnectivityChanged(isConnected: Boolean) {
+        if (isConnected) {
+            addDisposable(moviesRepository.getMoviesFromNetwork().subscribe())
+        }
     }
 
     fun getMovies(forceUpdate: Boolean) {
         showLoading()
-        addDisposable(
-            moviesRepository.getMoviesFromNetwork()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({
-                    moviesList = it.orEmpty()
-                    if (searchString.isNotEmpty()) {
-                        searchMovie(searchString)
-                    } else {
-                        moviesLiveData.value = it
-                    }
-                    hideLoading()
-                }, {
-                    Timber.e(it)
-                    hideLoading()
-                })
-        )
+        if (forceUpdate) {
+            addDisposable(
+                moviesRepository.getMoviesFromNetwork()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        moviesList = it.orEmpty()
+                        if (searchString.isNotEmpty()) {
+                            searchMovie(searchString)
+                        } else {
+                            moviesLiveData.value = it
+                        }
+                        hideLoading()
+                    }, {
+                        Timber.e(it)
+                        error.value = it.message
+                        hideLoading()
+                    })
+            )
+        } else {
+            addDisposable(
+                moviesRepository.getMoviesFromDB()
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({
+                        it.forEach {
+                            Timber.d(it.title)
+                        }
+                        hideLoading()
+                    }, {
+                        Timber.e(it)
+                        error.value = it.message
+                        hideLoading()
+                    })
+            )
+        }
     }
 
     private fun hideLoading() {
@@ -68,9 +100,9 @@ class MoviesActivityViewModel @Inject constructor(private val moviesRepository: 
                     val queryLowerCase = query.toLowerCase()
                     moviesList.filter {
                         it.title.toLowerCase().contains(queryLowerCase)
-                    }.distinct()
+                    }
                 } else {
-                    moviesList.distinct()
+                    moviesList
                 }
             }
             .subscribeOn(Schedulers.io())
@@ -79,5 +111,4 @@ class MoviesActivityViewModel @Inject constructor(private val moviesRepository: 
                 moviesLiveData.value = list
             })
     }
-
 }

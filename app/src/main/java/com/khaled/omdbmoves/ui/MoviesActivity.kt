@@ -1,6 +1,7 @@
 package com.khaled.omdbmoves.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -51,6 +52,10 @@ class MoviesActivity : AppCompatActivity(), Injectable {
     private fun initViewModel() {
         moviesActivityViewModel.moviesLiveData.observe(this, Observer {
             moviesAdapter.submitList(it)
+        })
+
+        moviesActivityViewModel.error.observe(this, Observer { error ->
+            Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_LONG).show()
         })
     }
 }
