@@ -1,4 +1,4 @@
-package com.khaled.omdbmoves.ui
+package com.khaled.omdbmoves.ui.movies
 
 import android.os.Bundle
 import android.widget.Toast
@@ -10,9 +10,11 @@ import com.khaled.omdbmoves.R
 import com.khaled.omdbmoves.binding.PhotoManagerDataBindingComponent
 import com.khaled.omdbmoves.databinding.ActivityMoviesBinding
 import com.khaled.omdbmoves.di.Injectable
+import com.khaled.omdbmoves.ui.details.DetailsActivity
 import com.khaled.omdbmoves.utils.extensions.viewModel
 import com.khaled.omdbmoves.utils.ui.SimpleDividerItemDecoration
 import onTextChanged
+import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity(), Injectable {
@@ -25,7 +27,6 @@ class MoviesActivity : AppCompatActivity(), Injectable {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_movies)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_movies)
         initViews()
         initViewModel()
@@ -38,7 +39,10 @@ class MoviesActivity : AppCompatActivity(), Injectable {
             searchMovie.onTextChanged { moviesActivityViewModel.searchMovie(it) }
         }
 
-        moviesAdapter = MoviesAdapter(photoManagerDataBindingComponent)
+        moviesAdapter =
+            MoviesAdapter(photoManagerDataBindingComponent) {
+                startActivity(DetailsActivity.newIntent(this, it))
+            }
 
         with(binding.movies) {
             layoutManager = LinearLayoutManager(this@MoviesActivity)

@@ -1,4 +1,4 @@
-package com.khaled.omdbmoves.ui
+package com.khaled.omdbmoves.ui.movies
 
 import androidx.lifecycle.MutableLiveData
 import com.khaled.omdbmoves.data.model.Movie

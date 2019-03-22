@@ -8,11 +8,53 @@ import com.khaled.omdbmoves.data.network.themoviedb.model.ApiMovie
 object DataMapper {
 
     fun convertMovieFromDb(dbMovie: DbMovie) =
-        Movie(dbMovie.id, dbMovie.posterPath, dbMovie.releaseDate, dbMovie.title)
+        Movie(
+            dbMovie.id,
+            dbMovie.title,
+            dbMovie.adult,
+            dbMovie.backdropPath,
+            dbMovie.originalLanguage,
+            dbMovie.originalTitle,
+            dbMovie.overview,
+            dbMovie.popularity,
+            dbMovie.posterPath,
+            dbMovie.releaseDate,
+            dbMovie.video,
+            dbMovie.voteAverage,
+            dbMovie.voteCount
+        )
 
     fun covertMovieToDb(movie: Movie) =
-        DbMovie(movie.id, movie.title, movie.releaseDate, movie.posterPath)
+        DbMovie(
+            movie.id,
+            movie.title,
+            movie.adult,
+            movie.backdropPath,
+            movie.originalLanguage,
+            movie.originalTitle,
+            movie.overview,
+            movie.popularity,
+            movie.posterPath,
+            movie.releaseDate,
+            movie.video,
+            movie.voteAverage,
+            movie.voteCount
+        )
 
     fun convertMovieFromApi(apiMovie: ApiMovie) =
-        Movie(apiMovie.id, apiMovie.posterPath, apiMovie.releaseDate, apiMovie.title)
+        Movie(
+            apiMovie.id,
+            apiMovie.title,
+            apiMovie.adult,
+            apiMovie.backdropPath,
+            apiMovie.originalLanguage,
+            apiMovie.originalTitle,
+            apiMovie.overview,
+            apiMovie.popularity,
+            apiMovie.posterPath,
+            apiMovie.releaseDate,
+            apiMovie.video,
+            apiMovie.voteAverage,
+            apiMovie.voteCount
+        )
 }

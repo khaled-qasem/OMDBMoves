@@ -11,7 +11,7 @@
     </data>
 
     <RelativeLayout
-        android:id="@+id/workerItem"
+        android:id="@+id/movieItem"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:background="@color/white"
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="left|center_vertical"
                 android:singleLine="true"
-                android:text="@{movie.releaseDate}"
+                android:text="@{@string/release_date + movie.releaseDate}"
                 android:textColor="@color/gray_55"
                 android:textSize="14sp" />
 

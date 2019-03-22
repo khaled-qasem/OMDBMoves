@@ -1,10 +1,8 @@
 package com.khaled.omdbmoves.repository
 
-import android.annotation.SuppressLint
 import com.khaled.omdbmoves.BuildConfig
 import com.khaled.omdbmoves.data.DataMapper
 import com.khaled.omdbmoves.data.model.Movie
-import com.khaled.omdbmoves.data.database.model.Movie as DbMovie
 import com.khaled.omdbmoves.data.network.themoviedb.MoviesApiServices
 import com.khaled.omdbmoves.data.network.themoviedb.model.MoviesApiResponse
 import io.reactivex.Flowable
@@ -14,6 +12,7 @@ import io.reactivex.functions.Function5
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import javax.inject.Inject
+import com.khaled.omdbmoves.data.database.model.Movie as DbMovie
 
 class MoviesRepository @Inject constructor(
     private val moviesApiServices: MoviesApiServices,
@@ -41,7 +40,6 @@ class MoviesRepository @Inject constructor(
                 it
             }.observeOn(Schedulers.io())
 
-    @SuppressLint("CheckResult")
     fun getMoviesFromDB(): Flowable<List<Movie>> = realm.where(DbMovie::class.java)
         .sort("title")
         .findAllAsync()

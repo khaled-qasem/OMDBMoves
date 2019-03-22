@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="com.khaled.omdbmoves.ui.MoviesActivityViewModel" />
+            type="com.khaled.omdbmoves.ui.movies.MoviesActivityViewModel" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

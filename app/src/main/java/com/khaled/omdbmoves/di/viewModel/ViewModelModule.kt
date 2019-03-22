@@ -2,7 +2,7 @@ package com.khaled.omdbmoves.di.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.khaled.omdbmoves.ui.MoviesActivityViewModel
+import com.khaled.omdbmoves.ui.movies.MoviesActivityViewModel
 import dagger.Binds
 import dagger.Module
 import dagger.multibindings.IntoMap

@@ -1,4 +1,4 @@
-package com.khaled.omdbmoves.ui
+package com.khaled.omdbmoves.ui.movies
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +10,10 @@ import com.khaled.omdbmoves.data.model.Movie
 import com.khaled.omdbmoves.databinding.ListItemMovieBinding
 import com.khaled.omdbmoves.utils.ui.DataBoundListAdapter
 
-class MoviesAdapter(private val photoManagerDataBindingComponent: PhotoManagerDataBindingComponent) :
+class MoviesAdapter(
+    private val photoManagerDataBindingComponent: PhotoManagerDataBindingComponent,
+    private val callback: (movie: Movie) -> Unit
+) :
     DataBoundListAdapter<Movie, ListItemMovieBinding>(
         object : DiffUtil.ItemCallback<Movie>() {
             override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
@@ -23,13 +26,19 @@ class MoviesAdapter(private val photoManagerDataBindingComponent: PhotoManagerDa
         }
     ) {
     override fun createBinding(parent: ViewGroup): ListItemMovieBinding {
-        return DataBindingUtil.inflate(
+        val binding = DataBindingUtil.inflate<ListItemMovieBinding>(
             LayoutInflater.from(parent.context),
             R.layout.list_item_movie,
             parent,
             false,
             photoManagerDataBindingComponent
         )
+        binding.root.setOnClickListener {
+            binding.movie?.let {
+                callback(it)
+            }
+        }
+        return binding
     }
 
     override fun bind(binding: ListItemMovieBinding, item: Movie) {

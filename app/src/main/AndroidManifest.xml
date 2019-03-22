@@ -17,7 +17,10 @@
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity
-            android:name=".ui.MoviesActivity"
+            android:name=".ui.details.DetailsActivity"
+            android:label="@string/details" />
+        <activity
+            android:name=".ui.movies.MoviesActivity"
             android:label="@string/movies"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>

@@ -37,7 +37,8 @@ class PhotosManagerImpl @Inject constructor(
 
     private fun loadDefaultPhoto(
         uri: Uri,
-        imageView: ImageView, @DrawableRes defaultImage: Int,
+        imageView: ImageView,
+        @DrawableRes defaultImage: Int,
         circular: Boolean,
         blur: Boolean
     ) {
