@@ -42,8 +42,6 @@ class MoviesRepository @Inject constructor(
                 it
             }.observeOn(Schedulers.io())
 
-    fun closeRealm() = realm.close()
-
     fun getMoviesFromDB(): Flowable<List<Movie>> = realm.where(DbMovie::class.java)
         .sort("title")
         .findAllAsync()
