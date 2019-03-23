@@ -16,7 +16,7 @@ import com.khaled.omdbmoves.data.database.model.Movie as DbMovie
 
 class MoviesRepository @Inject constructor(
     private val moviesApiServices: MoviesApiServices,
-    private val realm: Realm
+    val realm: Realm
 ) {
     fun getMoviesFromNetwork(): Single<List<Movie>> =
         Single.zip<MoviesApiResponse, MoviesApiResponse, MoviesApiResponse, MoviesApiResponse, MoviesApiResponse, List<Movie>>(
@@ -35,10 +35,14 @@ class MoviesRepository @Inject constructor(
                 }
             }
         ).observeOn(AndroidSchedulers.mainThread())
+            // Since realm doesn't work well on Schedulers.io() I will observe on main thread
+            // Write on realm database then return to Schedulers.io()
             .map {
                 writeOnDB(it)
                 it
             }.observeOn(Schedulers.io())
+
+    fun closeRealm() = realm.close()
 
     fun getMoviesFromDB(): Flowable<List<Movie>> = realm.where(DbMovie::class.java)
         .sort("title")
@@ -80,6 +84,9 @@ class MoviesRepository @Inject constructor(
     }
 }
 
+/**
+ * Extension fun to add movies from response to movie list
+ */
 private fun MutableList<Movie>.addResponse(moviesApiResponse: MoviesApiResponse?) {
     moviesApiResponse?.let {
         this.addAll(moviesApiResponse.movies.map { DataMapper.convertMovieFromApi(it) })

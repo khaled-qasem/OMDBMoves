@@ -13,18 +13,17 @@ import com.khaled.omdbmoves.utils.ui.DataBoundListAdapter
 class MoviesAdapter(
     private val photoManagerDataBindingComponent: PhotoManagerDataBindingComponent,
     private val callback: (movie: Movie) -> Unit
-) :
-    DataBoundListAdapter<Movie, ListItemMovieBinding>(
-        object : DiffUtil.ItemCallback<Movie>() {
-            override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-                return oldItem.id == newItem.id
-            }
-
-            override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-                return oldItem.title == newItem.title
-            }
+) : DataBoundListAdapter<Movie, ListItemMovieBinding>(
+    object : DiffUtil.ItemCallback<Movie>() {
+        override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+            return oldItem.id == newItem.id
         }
-    ) {
+
+        override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
+            return oldItem.title == newItem.title
+        }
+    }
+) {
     override fun createBinding(parent: ViewGroup): ListItemMovieBinding {
         val binding = DataBindingUtil.inflate<ListItemMovieBinding>(
             LayoutInflater.from(parent.context),

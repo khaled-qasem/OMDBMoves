@@ -16,7 +16,7 @@ import javax.inject.Inject
 class MoviesActivityViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository,
     connectivityListener: ConnectivityListener
-) : DisposableViewModel(), ConnectivityListener.ConnectivityChangeListener {
+) : DisposableViewModel(moviesRepository.realm), ConnectivityListener.ConnectivityChangeListener {
     val moviesLiveData = MutableLiveData<List<Movie>>()
     val isLoading = MutableLiveData<Boolean>()
     val error = MutableLiveData<String>()

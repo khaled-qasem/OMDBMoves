@@ -4,7 +4,9 @@ import com.khaled.omdbmoves.data.model.Movie
 import com.khaled.omdbmoves.data.database.model.Movie as DbMovie
 import com.khaled.omdbmoves.data.network.themoviedb.model.ApiMovie
 
-
+/**
+ * Util class to map models
+ */
 object DataMapper {
 
     fun convertMovieFromDb(dbMovie: DbMovie) =
