@@ -16,7 +16,7 @@ import javax.inject.Inject
 class MoviesActivityViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository,
     connectivityListener: ConnectivityListener
-) : DisposableViewModel(moviesRepository.realm), ConnectivityListener.ConnectivityChangeListener {
+) : DisposableViewModel(), ConnectivityListener.ConnectivityChangeListener {
     val moviesLiveData = MutableLiveData<List<Movie>>()
     val isLoading = MutableLiveData<Boolean>()
     val error = MutableLiveData<String>()
@@ -112,5 +112,9 @@ class MoviesActivityViewModel @Inject constructor(
             .subscribeBy<List<Movie>> { list ->
                 moviesLiveData.value = list
             })
+    }
+
+    fun closeRealm() {
+        moviesRepository.closeRealm()
     }
 }

@@ -14,7 +14,6 @@ import com.khaled.omdbmoves.ui.details.DetailsActivity
 import com.khaled.omdbmoves.utils.extensions.viewModel
 import com.khaled.omdbmoves.utils.ui.SimpleDividerItemDecoration
 import onTextChanged
-import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesActivity : AppCompatActivity(), Injectable {
@@ -60,5 +59,10 @@ class MoviesActivity : AppCompatActivity(), Injectable {
         moviesActivityViewModel.error.observe(this, Observer {
             Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_LONG).show()
         })
+    }
+
+    override fun onDestroy() {
+        moviesActivityViewModel.closeRealm()
+        super.onDestroy()
     }
 }

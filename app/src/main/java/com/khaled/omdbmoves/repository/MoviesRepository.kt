@@ -73,6 +73,10 @@ class MoviesRepository @Inject constructor(
         }
     }
 
+    fun closeRealm() {
+        realm.close()
+    }
+
     companion object {
         private const val MOVIES_LANGUAGE = "en-US"
         private const val MOVIES_RELEASE_YEAR = 2018
