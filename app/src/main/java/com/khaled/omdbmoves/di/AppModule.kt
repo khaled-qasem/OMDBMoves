@@ -40,7 +40,7 @@ class AppModule {
 
     @Singleton
     @Provides
-    fun provideWakeCapService(okHttpClient: OkHttpClient): MoviesApiServices {
+    fun provideMoviesApiServices(okHttpClient: OkHttpClient): MoviesApiServices {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.OMDB_DOMAIN)
             .client(okHttpClient)
