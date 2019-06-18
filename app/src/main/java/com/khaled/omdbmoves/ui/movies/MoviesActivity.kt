@@ -60,9 +60,4 @@ class MoviesActivity : AppCompatActivity(), Injectable {
             Toast.makeText(this, R.string.something_went_wrong, Toast.LENGTH_LONG).show()
         })
     }
-
-    override fun onDestroy() {
-        moviesActivityViewModel.closeRealm()
-        super.onDestroy()
-    }
 }

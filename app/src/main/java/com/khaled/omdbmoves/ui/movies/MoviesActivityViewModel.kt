@@ -114,7 +114,8 @@ class MoviesActivityViewModel @Inject constructor(
             })
     }
 
-    fun closeRealm() {
+    override fun onCleared() {
         moviesRepository.closeRealm()
+        super.onCleared()
     }
 }
