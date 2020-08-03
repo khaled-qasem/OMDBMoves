@@ -5,11 +5,11 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "com.khaled.omdbmoves"
         minSdkVersion 18
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -71,63 +71,49 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.appcompat:appcompat:1.0.0-beta01'
-    implementation 'androidx.core:core-ktx:1.1.0-alpha05'
-    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0-alpha4'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0-alpha4'
-    implementation fileTree(include: ['*.jar'], dir: 'libs')
-
     //Android Support Libraries
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation "androidx.appcompat:appcompat:$supportVersion"
-    implementation "com.google.android.material:material:$supportVersion"
-    implementation "androidx.cardview:cardview:$supportVersion"
-    implementation "androidx.percentlayout:percentlayout:$supportVersion"
-    implementation "androidx.legacy:legacy-support-v4:$supportVersion"
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.core:core-ktx:1.3.1'
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation "com.google.android.material:material:1.1.0"
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
+
+    //Unit Test
+    testImplementation 'junit:junit:4.13'
+    androidTestImplementation 'androidx.test:runner:1.3.0-rc02'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-rc02'
+
+    //lifecycle
+    implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
+    kapt "androidx.lifecycle:lifecycle-compiler:2.3.0-alpha06"
+    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
+
+    //KTX
+    implementation "androidx.fragment:fragment-ktx:1.2.5"
 
     //dagger2
-    implementation "com.google.dagger:dagger-android:$daggerVersion"
-    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    implementation 'com.google.dagger:dagger-android:2.28.3'
+    implementation 'com.google.dagger:dagger-android-support:2.28.3'
     kapt "com.google.dagger:dagger-android-processor:$daggerVersion"
     kapt "com.google.dagger:dagger-compiler:$daggerVersion"
 
     //Retrofit2 Dependencies
     implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation 'com.squareup.okhttp3:okhttp-urlconnection:3.9.0'
-    implementation 'com.squareup.okhttp3:logging-interceptor:3.11.0'
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.8.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.8.0'
     implementation "com.squareup.retrofit2:adapter-rxjava2:$retrofitVersion"
-
-    //lifecycle
-    implementation "androidx.lifecycle:lifecycle-extensions:$lifecycleVersion"
-    kapt "androidx.lifecycle:lifecycle-compiler:$lifecycleVersion"
-    implementation "androidx.lifecycle:lifecycle-common-java8:$lifecycleVersion"
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
 
     //rxJava
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxkotlin:2.3.0'
 
-    //KTX
-    implementation "androidx.core:core-ktx:$ktxVersion"
-    implementation "androidx.fragment:fragment-ktx:$ktxFragmentVersion"
-    implementation 'androidx.exifinterface:exifinterface:1.0.0'
-    implementation 'com.jakewharton.timber:timber:4.7.1'
-    implementation('it.sephiroth.android.exif:library:1.0.1') {
-        exclude module: 'commons-io'
-    }
-
     // Glide Dependencies
-    implementation 'com.github.bumptech.glide:glide:4.8.0'
-    implementation 'androidx.vectordrawable:vectordrawable:1.0.1'
-    kapt "com.github.bumptech.glide:compiler:4.8.0"
-    implementation 'jp.wasabeef:glide-transformations:3.3.0'
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
+    kapt "com.github.bumptech.glide:compiler:4.11.0"
+    implementation 'jp.wasabeef:glide-transformations:4.0.0'
     implementation 'jp.co.cyberagent.android.gpuimage:gpuimage-library:1.4.1'
 
     //Timber
@@ -137,8 +123,8 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
     //realm
-    implementation 'io.realm:realm-gradle-plugin:5.9.1'
+    implementation "io.realm:realm-gradle-plugin:6.0.2"
 
     // Clearable Edit Text View
-    implementation 'com.github.Cielsk:clearable-edittext:0.0.6'
+    implementation 'com.github.Cielsk:clearable-edittext:0.0.8'
 }

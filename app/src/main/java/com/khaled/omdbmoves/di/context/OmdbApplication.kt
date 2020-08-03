@@ -1,6 +1,5 @@
 package com.khaled.omdbmoves.di.context
 
-import android.app.Activity
 import androidx.multidex.MultiDexApplication
 import com.khaled.omdbmoves.BuildConfig
 import com.khaled.omdbmoves.di.AppComponent
@@ -8,16 +7,17 @@ import com.khaled.omdbmoves.di.DaggerAppComponent
 import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListener
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
-import dagger.android.HasActivityInjector
+import dagger.android.HasAndroidInjector
 import io.realm.Realm
 import io.realm.RealmConfiguration
 import timber.log.Timber
 import javax.inject.Inject
 
-class OmdbApplication : MultiDexApplication(), HasActivityInjector {
+class OmdbApplication : MultiDexApplication(), HasAndroidInjector {
 
     @Inject
-    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Activity>
+    lateinit var dispatchingAndroidInjector: DispatchingAndroidInjector<Any>
+
     @Inject
     lateinit var applicationLifeCycleListener: ApplicationLifeCycleListener
 
@@ -31,7 +31,7 @@ class OmdbApplication : MultiDexApplication(), HasActivityInjector {
         initRealm()
     }
 
-    override fun activityInjector(): AndroidInjector<Activity> = dispatchingAndroidInjector
+    override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
 
     private fun initRealm() {
         Realm.init(this)

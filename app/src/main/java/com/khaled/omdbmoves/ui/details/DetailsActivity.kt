@@ -40,7 +40,7 @@ class DetailsActivity : AppCompatActivity(), Injectable {
 
     private fun initViews() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val movie: Movie? = intent.extras.getParcelable(MOVIE_EXTRA) as Movie
+        val movie: Movie? = intent.extras?.getParcelable(MOVIE_EXTRA) as? Movie
         binding.movie = movie
     }
 
