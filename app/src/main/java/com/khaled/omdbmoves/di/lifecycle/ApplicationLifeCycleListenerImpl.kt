@@ -16,7 +16,7 @@ class ApplicationLifeCycleListenerImpl : ApplicationLifeCycleListener {
     private val lifeCycleListeners =
         hashSetOf<ApplicationLifeCycleListener.LifeCycleChangeListener>()
     private var currentActivity: Activity? = null
-    private lateinit var lifeCycleStatus: ApplicationLifeCycleListener.LifeCycleStatus
+    private var lifeCycleStatus: ApplicationLifeCycleListener.LifeCycleStatus? = null
 
     init {
         ProcessLifecycleOwner.get().lifecycle.addObserver(this)
@@ -59,6 +59,7 @@ class ApplicationLifeCycleListenerImpl : ApplicationLifeCycleListener {
 
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         injectActivityAndItsFragments(activity)
+        lifeCycleListeners.forEach { it.onActivityCreated(activity) }
     }
 
     override fun onStart(owner: LifecycleOwner) {

@@ -29,8 +29,8 @@ class DetailsActivity : AppCompatActivity(), Injectable {
         initViews()
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?) =
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem) =
+        when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
                 true
@@ -40,8 +40,9 @@ class DetailsActivity : AppCompatActivity(), Injectable {
 
     private fun initViews() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        val movie: Movie? = intent.extras?.getParcelable(MOVIE_EXTRA) as? Movie
-        binding.movie = movie
+        (intent.extras?.getParcelable(MOVIE_EXTRA) as? Movie)?.let {
+            binding.movie = it
+        }
     }
 
     companion object {

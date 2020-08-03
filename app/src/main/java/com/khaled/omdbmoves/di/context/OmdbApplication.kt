@@ -5,6 +5,7 @@ import com.khaled.omdbmoves.BuildConfig
 import com.khaled.omdbmoves.di.AppComponent
 import com.khaled.omdbmoves.di.DaggerAppComponent
 import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListener
+import com.khaled.omdbmoves.di.net.connectivity.NetworkConnectivityListener
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
@@ -21,6 +22,9 @@ class OmdbApplication : MultiDexApplication(), HasAndroidInjector {
     @Inject
     lateinit var applicationLifeCycleListener: ApplicationLifeCycleListener
 
+    @Inject
+    lateinit var networkConnectivityListener: NetworkConnectivityListener
+
     val applicationComponent: AppComponent by lazy { initializeDaggerComponent() }
 
     override fun onCreate() {
@@ -28,7 +32,13 @@ class OmdbApplication : MultiDexApplication(), HasAndroidInjector {
         setupTimber()
         applicationComponent.inject(this)
         registerActivityLifecycleCallbacks(applicationLifeCycleListener)
+        initNetworkConnectivityListener()
         initRealm()
+    }
+
+    private fun initNetworkConnectivityListener() {
+        // This's just to init networkConnectivityListener before starting an activity
+        networkConnectivityListener.isConnected
     }
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector

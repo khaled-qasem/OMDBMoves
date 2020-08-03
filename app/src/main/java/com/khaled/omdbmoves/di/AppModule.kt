@@ -5,8 +5,6 @@ import com.khaled.omdbmoves.BuildConfig
 import com.khaled.omdbmoves.di.context.OmdbApplication
 import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListener
 import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListenerImpl
-import com.khaled.omdbmoves.di.net.connectivity.ConnectivityListener
-import com.khaled.omdbmoves.di.net.connectivity.ConnectivityListenerImpl
 import com.khaled.omdbmoves.data.network.themoviedb.MoviesApiServices
 import com.khaled.omdbmoves.di.photos.PhotosManager
 import com.khaled.omdbmoves.di.photos.PhotosManagerImpl
@@ -32,11 +30,6 @@ class AppModule {
     @Singleton
     fun provideActivityLifeCycleListener(): ApplicationLifeCycleListener =
         ApplicationLifeCycleListenerImpl()
-
-    @Provides
-    @Singleton
-    fun provideConnectivityListener(connectivityListenerImpl: ConnectivityListenerImpl): ConnectivityListener =
-        connectivityListenerImpl
 
     @Singleton
     @Provides

@@ -21,7 +21,9 @@ interface ApplicationLifeCycleListener : Application.ActivityLifecycleCallbacks,
     interface LifeCycleChangeListener {
         fun onLifecycleChanged(status: LifeCycleStatus)
 
-        fun onActivityResumed(activity: Activity) {}
+        fun onActivityCreated(activity: Activity){}
+
+        fun onActivityResumed(activity: Activity){}
     }
 
     enum class LifeCycleStatus {

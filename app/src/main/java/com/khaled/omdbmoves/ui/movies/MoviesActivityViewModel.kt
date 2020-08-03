@@ -1,8 +1,10 @@
 package com.khaled.omdbmoves.ui.movies
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.khaled.omdbmoves.data.model.Movie
-import com.khaled.omdbmoves.di.net.connectivity.ConnectivityListener
+import com.khaled.omdbmoves.di.net.connectivity.NetworkConnectivityListener
+import com.khaled.omdbmoves.di.net.connectivity.NetworkStatusListener
 import com.khaled.omdbmoves.repository.MoviesRepository
 import com.khaled.omdbmoves.utils.viewmodel.DisposableViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -15,28 +17,28 @@ import javax.inject.Inject
 
 class MoviesActivityViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository,
-    connectivityListener: ConnectivityListener
-) : DisposableViewModel(), ConnectivityListener.ConnectivityChangeListener {
-    val moviesLiveData = MutableLiveData<List<Movie>>()
-    val isLoading = MutableLiveData<Boolean>()
-    val error = MutableLiveData<String>()
+    networkConnectivityListener: NetworkConnectivityListener
+) : DisposableViewModel(), NetworkStatusListener {
+    private val _moviesLiveData = MutableLiveData<List<Movie>>()
+    val moviesLiveData: LiveData<List<Movie>> get() = _moviesLiveData
+
+    private val _isLoading = MutableLiveData<Boolean>()
+    val isLoading get() = _isLoading
+
+    private val _error = MutableLiveData<String>()
+    val error: LiveData<String> get() = _error
+
     private val searchSubject = PublishSubject.create<String>()
     private var moviesList = emptyList<Movie>()
     private var searchString: String = ""
 
     init {
         addSearchSubjectDisposable()
-        connectivityListener.registerForConnectivityChange(this)
-        if (connectivityListener.isConnected) {
+        networkConnectivityListener.registerForNetworkStatusChanges(this)
+        if (networkConnectivityListener.isConnected.value?.peekContent() == true) {
             getMovies(true)
         } else {
             getMovies(false)
-        }
-    }
-
-    override fun onConnectivityChanged(isConnected: Boolean) {
-        if (isConnected) {
-            addDisposable(moviesRepository.getMoviesFromNetwork().subscribe())
         }
     }
 
@@ -52,12 +54,12 @@ class MoviesActivityViewModel @Inject constructor(
                         if (searchString.isNotEmpty()) {
                             searchMovie(searchString)
                         } else {
-                            moviesLiveData.value = it
+                            _moviesLiveData.value = it
                         }
                         hideLoading()
                     }, {
                         Timber.e(it)
-                        error.value = it.message
+                        _error.value = it.message
                         hideLoading()
                     })
             )
@@ -70,12 +72,12 @@ class MoviesActivityViewModel @Inject constructor(
                         if (searchString.isNotEmpty()) {
                             searchMovie(searchString)
                         } else {
-                            moviesLiveData.value = it
+                            _moviesLiveData.value = it
                         }
                         hideLoading()
                     }, {
                         Timber.e(it)
-                        error.value = it.message
+                        _error.value = it.message
                         hideLoading()
                     })
             )
@@ -110,12 +112,23 @@ class MoviesActivityViewModel @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy<List<Movie>> { list ->
-                moviesLiveData.value = list
+                _moviesLiveData.value = list
             })
     }
 
     override fun onCleared() {
         moviesRepository.closeRealm()
         super.onCleared()
+    }
+
+    override fun onNetworkStatusChanged(isConnected: Boolean) {
+        if (isConnected) {
+            addDisposable(
+                moviesRepository.getMoviesFromNetwork()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe()
+            )
+        }
     }
 }
