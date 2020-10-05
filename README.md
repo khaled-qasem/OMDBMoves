@@ -7,15 +7,15 @@ The local database will be automatically updated whenever we connect to the inte
 
 
 ## Technologies and libraries:
-Libraries used in this assignment: 
-Dagger 2
-RxJava
-Retrofit
-Realm
-Android Architecture Components and Life Cycle Components
-Data binding
-Glide
-Timber
+* Libraries used in this assignment: 
+* Dagger 2
+* RxJava
+* Retrofit
+* Realm
+* Android Architecture Components and Life Cycle Components
+* Data binding
+* Glide
+* Timber
 
 Task Architecture : MVVM
 
