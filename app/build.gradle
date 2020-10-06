@@ -69,6 +69,11 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
+
+    useLibrary 'android.test.runner'
+
+    useLibrary 'android.test.base'
+    useLibrary 'android.test.mock'
 }
 
 dependencies {
@@ -83,8 +88,9 @@ dependencies {
 
     //Unit Test
     testImplementation 'junit:junit:4.13'
-    androidTestImplementation 'androidx.test:runner:1.3.0-rc02'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0-rc02'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test:runner:1.3.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
     //lifecycle
     implementation "androidx.lifecycle:lifecycle-extensions:2.2.0"
