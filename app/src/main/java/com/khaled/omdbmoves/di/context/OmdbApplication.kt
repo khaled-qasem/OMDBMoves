@@ -9,8 +9,6 @@ import com.khaled.omdbmoves.di.net.connectivity.NetworkConnectivityListener
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
 import dagger.android.HasAndroidInjector
-import io.realm.Realm
-import io.realm.RealmConfiguration
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -33,7 +31,6 @@ class OmdbApplication : MultiDexApplication(), HasAndroidInjector {
         applicationComponent.inject(this)
         registerActivityLifecycleCallbacks(applicationLifeCycleListener)
         initNetworkConnectivityListener()
-        initRealm()
     }
 
     private fun initNetworkConnectivityListener() {
@@ -42,15 +39,6 @@ class OmdbApplication : MultiDexApplication(), HasAndroidInjector {
     }
 
     override fun androidInjector(): AndroidInjector<Any> = dispatchingAndroidInjector
-
-    private fun initRealm() {
-        Realm.init(this)
-        val config = RealmConfiguration.Builder()
-            .name("omdb.realm")
-            .schemaVersion(0)
-            .build()
-        Realm.setDefaultConfiguration(config)
-    }
 
     private fun initializeDaggerComponent() =
         DaggerAppComponent.builder()

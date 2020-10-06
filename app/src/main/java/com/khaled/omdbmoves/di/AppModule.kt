@@ -1,20 +1,21 @@
 package com.khaled.omdbmoves.di
 
 import android.content.Context
+import androidx.room.Room
 import com.khaled.omdbmoves.BuildConfig
+import com.khaled.omdbmoves.data.database.MoviesDao
+import com.khaled.omdbmoves.data.database.MoviesDatabase
 import com.khaled.omdbmoves.di.context.OmdbApplication
 import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListener
 import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListenerImpl
-import com.khaled.omdbmoves.data.network.themoviedb.MoviesApiServices
+import com.khaled.omdbmoves.data.network.MoviesApiServices
 import com.khaled.omdbmoves.di.photos.PhotosManager
 import com.khaled.omdbmoves.di.photos.PhotosManagerImpl
 import dagger.Module
 import dagger.Provides
-import io.realm.Realm
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
@@ -38,7 +39,6 @@ class AppModule {
             .baseUrl(BuildConfig.OMDB_DOMAIN)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .build()
             .create(MoviesApiServices::class.java)
     }
@@ -58,5 +58,10 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideRealm(): Realm = Realm.getDefaultInstance()
+    fun provideAppDatabase(context: Context): MoviesDatabase =
+        Room.databaseBuilder(context, MoviesDatabase::class.java, "Movies.db").build()
+
+    @Provides
+    fun provideMoviesDao(db: MoviesDatabase): MoviesDao =
+        db.moviesDao()
 }

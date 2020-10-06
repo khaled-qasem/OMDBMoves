@@ -1,59 +1,46 @@
 package com.khaled.omdbmoves.repository
 
 import com.khaled.omdbmoves.BuildConfig
-import com.khaled.omdbmoves.data.DataMapper
+import com.khaled.omdbmoves.data.database.MoviesDao
 import com.khaled.omdbmoves.data.model.Movie
-import com.khaled.omdbmoves.data.network.themoviedb.MoviesApiServices
-import com.khaled.omdbmoves.data.network.themoviedb.model.MoviesApiResponse
-import io.reactivex.Flowable
-import io.reactivex.Single
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.functions.Function5
-import io.reactivex.schedulers.Schedulers
-import io.realm.Realm
+import com.khaled.omdbmoves.data.network.MoviesApiServices
+import com.khaled.omdbmoves.data.model.MoviesApiResponse
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import com.khaled.omdbmoves.data.database.model.Movie as DbMovie
 
 class MoviesRepository @Inject constructor(
     private val moviesApiServices: MoviesApiServices,
-    val realm: Realm
+    private val moviesDao: MoviesDao
 ) {
-    fun getMoviesFromNetwork(): Single<List<Movie>> =
-        Single.zip<MoviesApiResponse, MoviesApiResponse, MoviesApiResponse, MoviesApiResponse, MoviesApiResponse, List<Movie>>(
-            getMoviesPerPage(1),
-            getMoviesPerPage(2),
-            getMoviesPerPage(3),
-            getMoviesPerPage(4),
-            getMoviesPerPage(5),
-            Function5 { response1, response2, response3, response4, response5 ->
+    suspend fun getMoviesFromNetwork(): List<Movie> {
+        return coroutineScope {
+            val firstPageDeferred = async { getMoviesPerPage(1).movies }
+            val secondPageDeferred = async { getMoviesPerPage(2).movies }
+            val thirdPageDeferred = async { getMoviesPerPage(3).movies }
+            val fourthPageDeferred = async { getMoviesPerPage(4).movies }
+            val fifthPageDeferred = async { getMoviesPerPage(5).movies }
+
+            val movies = withContext(Dispatchers.Default) {
                 mutableListOf<Movie>().apply {
-                    addResponse(response1)
-                    addResponse(response2)
-                    addResponse(response3)
-                    addResponse(response4)
-                    addResponse(response5)
+                    addAll(firstPageDeferred.await())
+                    addAll(secondPageDeferred.await())
+                    addAll(thirdPageDeferred.await())
+                    addAll(fourthPageDeferred.await())
+                    addAll(fifthPageDeferred.await())
                 }
             }
-        ).observeOn(AndroidSchedulers.mainThread())
-            // Since realm doesn't work well on Schedulers.io() I will observe on main thread
-            // Write on realm database then return to Schedulers.io()
-            .map {
-                writeOnDB(it)
-                it
-            }.observeOn(Schedulers.io())
 
-    fun getMoviesFromDB(): Flowable<List<Movie>> = realm.where(DbMovie::class.java)
-        .sort("title")
-        .findAllAsync()
-        .asFlowable()
-        .filter { movie -> movie.isLoaded }
-        .map {
-            realm.copyFromRealm(it).map { dbMovie ->
-                DataMapper.convertMovieFromDb(dbMovie)
-            }
+            insertMovies(movies)
+            movies
         }
+    }
 
-    private fun getMoviesPerPage(page: Int): Single<MoviesApiResponse> {
+    suspend fun getMoviesFromDB(): List<Movie> = moviesDao.getMovies().sortedBy { it.title }
+
+    private suspend fun getMoviesPerPage(page: Int): MoviesApiResponse {
         return moviesApiServices.getTopRatedMovies(
             BuildConfig.API,
             MOVIES_LANGUAGE,
@@ -65,16 +52,8 @@ class MoviesRepository @Inject constructor(
         )
     }
 
-    private fun writeOnDB(movies: List<Movie>) {
-        realm.executeTransaction {
-            movies.forEach {
-                realm.insertOrUpdate(DataMapper.covertMovieToDb(it))
-            }
-        }
-    }
-
-    fun closeRealm() {
-        realm.close()
+    private suspend fun insertMovies(movies: List<Movie>) {
+        moviesDao.insertMovies(movies)
     }
 
     companion object {
@@ -83,14 +62,5 @@ class MoviesRepository @Inject constructor(
         private const val SORTED_BY = "vote_average.desc"
         private const val INCLUDE_ADULT = false
         private const val INCLUDE_VIDEO = false
-    }
-}
-
-/**
- * Extension fun to add movies from response to movie list
- */
-private fun MutableList<Movie>.addResponse(moviesApiResponse: MoviesApiResponse?) {
-    moviesApiResponse?.let {
-        this.addAll(moviesApiResponse.movies.map { DataMapper.convertMovieFromApi(it) })
     }
 }

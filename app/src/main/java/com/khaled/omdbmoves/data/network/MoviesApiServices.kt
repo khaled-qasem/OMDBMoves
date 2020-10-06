@@ -1,14 +1,13 @@
-package com.khaled.omdbmoves.data.network.themoviedb
+package com.khaled.omdbmoves.data.network
 
-import com.khaled.omdbmoves.data.network.themoviedb.model.MoviesApiResponse
-import io.reactivex.Single
+import com.khaled.omdbmoves.data.model.MoviesApiResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface MoviesApiServices {
 
     @GET("3/discover/movie/")
-    fun getTopRatedMovies(
+    suspend fun getTopRatedMovies(
         @Query("api_key") apiKey: String,
         @Query("language") language: String,
         @Query("primary_release_year") primaryReleaseYear: Int,
@@ -16,5 +15,5 @@ interface MoviesApiServices {
         @Query("include_adult") includeAdult: Boolean,
         @Query("include_video") includeVideo: Boolean,
         @Query("page") page: Int
-    ): Single<MoviesApiResponse>
+    ): MoviesApiResponse
 }

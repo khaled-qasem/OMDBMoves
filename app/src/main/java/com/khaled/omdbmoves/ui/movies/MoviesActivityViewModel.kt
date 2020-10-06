@@ -2,23 +2,23 @@ package com.khaled.omdbmoves.ui.movies
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.khaled.omdbmoves.data.model.Movie
 import com.khaled.omdbmoves.di.net.connectivity.NetworkConnectivityListener
 import com.khaled.omdbmoves.di.net.connectivity.NetworkStatusListener
 import com.khaled.omdbmoves.repository.MoviesRepository
-import com.khaled.omdbmoves.utils.viewmodel.DisposableViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
-import io.reactivex.subjects.PublishSubject
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import timber.log.Timber
-import java.util.concurrent.TimeUnit
+import java.util.*
 import javax.inject.Inject
 
 class MoviesActivityViewModel @Inject constructor(
     private val moviesRepository: MoviesRepository,
     networkConnectivityListener: NetworkConnectivityListener
-) : DisposableViewModel(), NetworkStatusListener {
+) : ViewModel(), NetworkStatusListener {
     private val _moviesLiveData = MutableLiveData<List<Movie>>()
     val moviesLiveData: LiveData<List<Movie>> get() = _moviesLiveData
 
@@ -28,60 +28,59 @@ class MoviesActivityViewModel @Inject constructor(
     private val _error = MutableLiveData<String>()
     val error: LiveData<String> get() = _error
 
-    private val searchSubject = PublishSubject.create<String>()
     private var moviesList = emptyList<Movie>()
     private var searchString: String = ""
 
     init {
-        addSearchSubjectDisposable()
         networkConnectivityListener.registerForNetworkStatusChanges(this)
-        if (networkConnectivityListener.isConnected.value?.peekContent() == true) {
-            getMovies(true)
-        } else {
-            getMovies(false)
-        }
     }
 
     fun getMovies(forceUpdate: Boolean) {
         showLoading()
-        if (forceUpdate) {
-            addDisposable(
+        viewModelScope.launch(errorHandler) {
+            moviesList = if (forceUpdate) {
                 moviesRepository.getMoviesFromNetwork()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        moviesList = it.orEmpty()
-                        if (searchString.isNotEmpty()) {
-                            searchMovie(searchString)
-                        } else {
-                            _moviesLiveData.value = it
-                        }
-                        hideLoading()
-                    }, {
-                        Timber.e(it)
-                        _error.value = it.message
-                        hideLoading()
-                    })
-            )
-        } else {
-            addDisposable(
+            } else {
                 moviesRepository.getMoviesFromDB()
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({
-                        moviesList = it.orEmpty()
-                        if (searchString.isNotEmpty()) {
-                            searchMovie(searchString)
-                        } else {
-                            _moviesLiveData.value = it
-                        }
-                        hideLoading()
-                    }, {
-                        Timber.e(it)
-                        _error.value = it.message
-                        hideLoading()
-                    })
-            )
+            }
+
+            if (searchString.isNotEmpty()) {
+                searchMovie(searchString)
+            } else {
+                _moviesLiveData.value = moviesList
+            }
+            hideLoading()
         }
+    }
+
+    fun searchMovie(search: String) {
+        viewModelScope.launch {
+            searchString = search
+            delay(300)
+            if (search.isNotEmpty()) {
+                val queryLowerCase = search.toLowerCase(Locale.getDefault())
+                _moviesLiveData.value = moviesList.filter {
+                    it.title?.toLowerCase(Locale.getDefault())?.contains(queryLowerCase) ?: false
+                }
+            } else {
+                _moviesLiveData.value = moviesList
+            }
+        }
+
+    }
+
+    override fun onNetworkStatusChanged(isConnected: Boolean) {
+        if (isConnected) {
+            getMovies(forceUpdate = true)
+        } else {
+            getMovies(forceUpdate = false)
+        }
+    }
+
+    private val errorHandler = CoroutineExceptionHandler { _, throwable ->
+        hideLoading()
+        Timber.e(throwable)
+        _error.value = throwable.message
     }
 
     private fun hideLoading() {
@@ -90,45 +89,5 @@ class MoviesActivityViewModel @Inject constructor(
 
     private fun showLoading() {
         isLoading.value = true
-    }
-
-    fun searchMovie(search: String) {
-        searchString = search
-        searchSubject.onNext(search)
-    }
-
-    private fun addSearchSubjectDisposable() {
-        addDisposable(searchSubject.debounce(300, TimeUnit.MILLISECONDS)
-            .map { query ->
-                if (query.isNotEmpty()) {
-                    val queryLowerCase = query.toLowerCase()
-                    moviesList.filter {
-                        it.title.toLowerCase().contains(queryLowerCase)
-                    }
-                } else {
-                    moviesList
-                }
-            }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy<List<Movie>> { list ->
-                _moviesLiveData.value = list
-            })
-    }
-
-    override fun onCleared() {
-        moviesRepository.closeRealm()
-        super.onCleared()
-    }
-
-    override fun onNetworkStatusChanged(isConnected: Boolean) {
-        if (isConnected) {
-            addDisposable(
-                moviesRepository.getMoviesFromNetwork()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe()
-            )
-        }
     }
 }
