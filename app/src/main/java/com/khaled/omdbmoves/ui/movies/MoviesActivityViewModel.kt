@@ -8,6 +8,7 @@ import com.khaled.omdbmoves.data.model.Movie
 import com.khaled.omdbmoves.di.net.connectivity.NetworkConnectivityListener
 import com.khaled.omdbmoves.di.net.connectivity.NetworkStatusListener
 import com.khaled.omdbmoves.repository.MoviesRepository
+import com.khaled.omdbmoves.repository.MoviesRepositoryImpl
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

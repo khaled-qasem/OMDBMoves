@@ -11,6 +11,8 @@ import com.khaled.omdbmoves.di.lifecycle.ApplicationLifeCycleListenerImpl
 import com.khaled.omdbmoves.data.network.MoviesApiServices
 import com.khaled.omdbmoves.di.photos.PhotosManager
 import com.khaled.omdbmoves.di.photos.PhotosManagerImpl
+import com.khaled.omdbmoves.repository.MoviesRepository
+import com.khaled.omdbmoves.repository.MoviesRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -64,4 +66,9 @@ class AppModule {
     @Provides
     fun provideMoviesDao(db: MoviesDatabase): MoviesDao =
         db.moviesDao()
+
+    @Provides
+    @Singleton
+    fun provideMoviesRepository(moviesRepositoryImpl: MoviesRepositoryImpl): MoviesRepository =
+        moviesRepositoryImpl
 }
